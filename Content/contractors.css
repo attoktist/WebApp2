@@ -1,0 +1,70 @@
+﻿div {
+    display: inline-block;
+    margin: 20px;
+}
+
+#ButtonRef{
+    float: left;
+}
+
+#tableBlockContractor {
+    width: auto;
+}
+
+#editBlockContractor {
+    display: none;
+    float: right;
+}
+
+#createBlockContractor {
+    float: right;
+}
+
+#tableBlockArticle {
+    width: auto;
+}
+
+#editBlockArticle {
+    display: none;
+    float: right;
+}
+
+#createBlockArticle {
+    float: right;
+}
+
+#Article {
+    display: none;
+}
+
+#tableBlockOperation {
+    width: auto;
+}
+
+#editBlockOperation {
+    display: none;
+    float: right;
+}
+
+#createBlockOperation {
+    float: right;
+}
+
+#Operation {
+    display: none;
+}
+
+
+
+
+.navbar {
+    display: none;
+}
+
+.navbar-inverse {
+    display: none;
+}
+
+.navbar-fixed-top {
+    display: none;
+}

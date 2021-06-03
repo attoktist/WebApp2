@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -36,8 +37,9 @@ namespace WebApp2.Controllers
         }
 
         // PUT: api/Contractors/5
+        [HttpPut]
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutContractor(int id, Contractor contractor)
+        public IHttpActionResult UpdateContractor(int id, Contractor contractor)
         {
             if (!ModelState.IsValid)
             {
@@ -71,8 +73,9 @@ namespace WebApp2.Controllers
         }
 
         // POST: api/Contractors
+        [HttpPost]
         [ResponseType(typeof(Contractor))]
-        public IHttpActionResult PostContractor(Contractor contractor)
+        public IHttpActionResult CreateContractor(Contractor contractor)
         {
             if (!ModelState.IsValid)
             {
@@ -80,12 +83,27 @@ namespace WebApp2.Controllers
             }
 
             db.Contractors.Add(contractor);
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                //if (!ContractorExists(id))
+                //{
+                //    return NotFound();
+                //}
+                //else
+                //{
+                //    throw;
+                //}
+            }
 
             return CreatedAtRoute("DefaultApi", new { id = contractor.ID }, contractor);
         }
 
         // DELETE: api/Contractors/5
+        [HttpDelete]
         [ResponseType(typeof(Contractor))]
         public IHttpActionResult DeleteContractor(int id)
         {
@@ -96,7 +114,21 @@ namespace WebApp2.Controllers
             }
 
             db.Contractors.Remove(contractor);
-            db.SaveChanges();
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ContractorExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return Ok(contractor);
         }

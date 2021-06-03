@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace WebApp2.Models
 {
 
-    public class Operations
+    public class Operation
     {
         public int ID { get; set; }
         public DateTime Date { get; set; }

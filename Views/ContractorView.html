@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <title></title>
+</head>
+
+
+
+
+
+<body>
+<div id="tableBlock"></div>
+<div id="editBlock">
+    <h3>Редактирование контрагента</h3>
+    <table>
+        <tr><td><input type="hidden" id="editID" /></td><td></td></tr>
+        <tr><td><label>Название: </label></td><td><input type="text" id="editName" /></td></tr>
+    </table>
+    <button id="editContractor">Сохранить</button>
+</div>
+<div id="createBlock">
+    <h3>Добавление книги</h3>
+    <table>
+        <tr><td><label>Название: </label></td><td><input type="text" id="addName" /></td></tr>
+    </table>
+    <button id="addContractor">Сохранить</button>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        GetAllContractors();
+
+        $("#editContractor").click(function (event) {
+            event.preventDefault();
+            EditContractor();
+        });
+
+        $("#addContractor").click(function (event) {
+            event.preventDefault();
+            AddContractor();
+        });
+
+    });
+    // Получение всех контрагентов по ajax-запросу
+    function GetAllContractors() {
+
+        $("#createBlock").css('display', 'block');
+        $("#editBlock").css('display', 'none');
+        $.ajax({
+            url: '/api/contractors',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                WriteResponse(data);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+    // Добавление нового контрагента
+    function AddContractor() {
+        // получаем значения для добавляемой книги
+        var сontractor = {
+            Name: $('#addName').val()
+        };
+
+        $.ajax({
+            url: '/api/contractors',
+            type: 'POST',
+            data: JSON.stringify(сontractor),
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                GetAllContractors();
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+    // Удаление контрагента
+    function DeleteContractor(id) {
+
+        $.ajax({
+            url: '/api/contractors/' + id,
+            type: 'DELETE',
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                GetAllContractors();
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+    // редактирование контрагента
+    function EditContractor() {
+        var id = $('#editID').val()
+        // получаем новые значения для редактируемого контрагента
+        var сontractor = {
+            ID: $('#editID').val(),
+            Name: $('#editName').val()
+        };
+        $.ajax({
+            url: '/api/contractors/' + id,
+            type: 'PUT',
+            data: JSON.stringify(сontractor),
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                GetAllContractors();
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+    // вывод полученных данных на экран
+    function WriteResponse(сontractors) {
+        var strResult = "<table><th>ID</th><th>Название</th>";
+        $.each(сontractors, function (index, сontractor) {
+            strResult += "<tr><td>" + сontractor.ID + "</td><td> " + сontractor.Name + "</td><td>" +
+                "</td><td><a id='editItem' data-item='" + сontractor.ID + "' onclick='EditItem(this);' >Редактировать</a></td>" +
+                "<td><a id='delItem' data-item='" + сontractor.ID + "' onclick='DeleteItem(this);' >Удалить</a></td></tr>";
+        });
+        strResult += "</table>";
+        $("#tableBlock").html(strResult);
+
+    }
+    // обработчик удаления
+    function DeleteItem(el) {
+
+        // получаем id удаляемого объекта
+        var id = $(el).attr('data-item');
+        DeleteContractor(id);
+    }
+    // обработчик редактирования
+    function EditItem(el) {
+
+        // получаем id редактируемого объекта
+        var id = $(el).attr('data-item');
+        GetContractor(id);
+    }
+    // вывод данных редактируемого контрагента в поля для редактирования
+    function ShowContractor(сontractor) {
+        if (сontractor != null) {
+            $("#createBlock").css('display', 'none');
+            $("#editBlock").css('display', 'block');
+            $("#editID").val(сontractor.ID);
+            $("#editName").val(сontractor.Name);
+        }
+        else {
+            alert("Такой контрагент не существует");
+        }
+    }
+    // запрос контрагента на редактирование
+    function GetContractor(id) {
+
+        $.ajax({
+            url: '/api/contractors/' + id,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                ShowContractor(data);
+            },
+            error: function (x, y, z) {
+                alert(x + '\n' + y + '\n' + z);
+            }
+        });
+    }
+</script>
+    </body>
+</html>

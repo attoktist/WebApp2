@@ -1,24 +1,736 @@
-﻿<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>ASP.NET Web API is a framework that makes it easy to build HTTP services that reach
-        a broad range of clients, including browsers and mobile devices. ASP.NET Web API
-        is an ideal platform for building RESTful applications on the .NET Framework.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301870">Learn more &raquo;</a></p>
+﻿<html>
+<head>
+    
+    <link rel="stylesheet" href="~/Content/contractors.css" type="text/css" />
+    <script src='~/Scripts/jquery-3.4.1.min.js' type="text/javascript"></script>
+</head>
+<body>
+    <div id="ButtonRef">
+        <button id="getContractors">Контрагенты</button>
+        <button id="getArticles">Статьи</button>
+        <button id="getOperations">Операции</button>
+        <button id="RandomDB">Сгенерировать БД</button>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301871">Learn more &raquo;</a></p>
+    <div id="Contractor">
+        <div id="tableBlockContractor"></div>
+        <div id="editBlockContractor">
+            <h3>Редактирование контрагента</h3>
+            <table>
+                <tr><td><label>ID: </label></td><td><input type="text" id="editID" readonly="readonly" /></td></tr>
+                <tr><td><label>Название: </label></td><td><input type="text" id="editName" /></td></tr>
+            </table>
+            <button id="editContractor">Сохранить</button>
+        </div>
+        <div id="createBlockContractor">
+            <h3>Добавление контрагента</h3>
+            <table>
+                <tr><td><label>Название: </label></td><td><input type="text" id="addName" /></td></tr>
+            </table>
+            <button id="addContractor">Сохранить</button>
+        </div>
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>
+
+    <div id="Article">
+        <div id="tableBlockArticle"></div>
+        <div id="editBlockArticle">
+            <h3>Редактирование статьи</h3>
+            <table>
+                <tr><td><label>ID: </label></td><td><input type="text" id="editIDArticle" readonly="readonly" /></td></tr>
+                <tr><td><label>Название: </label></td><td><input type="text" id="editNameArticle" /></td></tr>
+                <tr><td><label>Родительская статья: </label></td><td><select class="sel1" name="editParentArticle"></select></td></tr>
+            </table>
+            <button id="editArticle">Сохранить</button>
+        </div>
+        <div id="createBlockArticle">
+            <h3>Добавление статьи</h3>
+            <table>
+                <tr><td><label>Название: </label></td><td><input type="text" id="addNameArticle" /></td></tr>
+                <tr>
+                    <td><label>Родительская статья: </label></td>
+                    <td>
+                        <select class="sel2" name="addParentArticle">
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <button id="addArticle">Сохранить</button>
+        </div>
     </div>
-</div>
+
+    <div id="Operation">
+        <div id="tableBlockOperation"></div>
+        <div id="editBlockOperation">
+            <h3>Редактирование операции</h3>
+            <table>
+                <tr><td><label>ID: </label></td><td><input type="text" id="editIDOperation" readonly="readonly" /></td></tr>
+                <tr><td><label>Дата: </label></td><td><input type="date" id="editDateOperation" /></td></tr>
+                <tr>
+                    <td><label>Тип: </label></td>
+                    <td>
+                        <select class="selOT1" name="editTypeOperation">
+                            <option selected value="0">Поступление</option>
+                            <option value="1">Выплата</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr><td><label>Сумма: </label></td><td><input type="number" id="editSumOperation" /></td></tr>
+                <tr><td><label>Контрагент: </label></td><td><select class="selOC1" name="editContractorOperation"></select></td></tr>
+                <tr><td><label>Статья: </label></td><td><select class="selOA1" name="editArticleOperation"></select></td></tr>
+            </table>
+            <button id="editOperation">Сохранить</button>
+        </div>
+        <div id="createBlockOperation">
+            <h3>Добавление операции</h3>
+            <table>
+                <tr><td><label>Дата: </label></td><td><input type="date" id="addDateOperation" /></td></tr>
+                <tr>
+                    <td><label>Тип: </label></td>
+                    <td>
+                        <select class="selOT2" name="addTypeOperation">
+                            <option selected value="0">Поступление</option>
+                            <option value="1">Выплата</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr><td><label>Сумма: </label></td><td><input type="number" id="addSumOperation" /></td></tr>
+                <tr><td><label>Контрагент: </label></td><td><select class="selOC2" name="addContractorOperation"></select></td></tr>
+                <tr><td><label>Статья: </label></td><td><select class="selOA2" name="addArticleOperation"></select></td></tr>
+            </table>
+            <button id="addOperation">Сохранить</button>
+        </div>
+    </div>
+
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#RandomDB").click(function (event) {
+                $.ajax({
+                    url: '/api/operations',
+                    type: 'GET',
+                    dataType: 'json',                    
+                    error: function (x, y, z) {
+                        alert(x + '\n' + y + '\n' + z);
+                    }
+                });
+            });
+
+            $("#getContractors").click(function (event) {
+                GetAllContractors();
+                $("#Contractor").css('display', 'block');
+                $("#Article").css('display', 'none');
+                $("#Operation").css('display', 'none');
+            });
+
+            $("#getArticles").click(function (event) {
+
+                GetAllArticles();
+
+                $("#Contractor").css('display', 'none');
+                $("#Article").css('display', 'block');
+                $("#Operation").css('display', 'none');
+            });
+
+            $("#getOperations").click(function (event) {
+
+                GetAllOperations();
+                $("#Contractor").css('display', 'none');
+                $("#Article").css('display', 'none');
+                $("#Operation").css('display', 'block');
+            });
+
+
+            $("#editContractor").click(function (event) {
+                event.preventDefault();
+                EditContractor();
+            });
+
+            $("#addContractor").click(function (event) {
+                event.preventDefault();
+                AddContractor();
+            });
+
+            $("#editArticle").click(function (event) {
+                event.preventDefault();
+                EditArticle();
+            });
+
+            $("#addArticle").click(function (event) {
+                event.preventDefault();
+                AddArticle();
+            });
+
+            $("#editOperation").click(function (event) {
+                event.preventDefault();
+                EditOperation();
+            });
+
+            $("#addOperation").click(function (event) {
+                event.preventDefault();
+                AddOperation();
+            });
+
+        });
+
+        //----------------------Article---------------------------------
+        // Получение всех статей по ajax-запросу
+        function GetAllArticles() {
+
+            $("#createBlockArticle").css('display', 'block');
+            $("#editBlockArticle").css('display', 'none');
+            GetAllArticlesForEdit();
+            $.ajax({
+                url: '/api/articles',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    WriteResponseArticle(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+
+
+        function UpdateSelect(articles) {
+            $('.sel1').find('option').remove();
+            $('.sel1').append('<option select value="' + undefined + '">Нет</option>');
+            $.each(articles, function (ID, Name) {
+
+                $('.sel1').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
+            });
+            $('.sel2').find('option').remove();
+            $('.sel2').append('<option select value="' + undefined + '">Нет</option>');
+            $.each(articles, function (ID, Name) {
+
+                $('.sel2').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
+            });
+
+            $('.selOA1').find('option').remove();
+            $('.selOA1').append('<option select value="' + undefined + '">Нет</option>');
+            $.each(articles, function (ID, Name) {
+
+                $('.selOA1').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
+            });
+
+            $('.selOA2').find('option').remove();
+            $('.selOA2').append('<option select value="' + undefined + '">Нет</option>');
+            $.each(articles, function (ID, Name) {
+
+                $('.selOA2').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
+            });
+        }
+
+        // Добавление новой статьи
+        function AddArticle() {
+            // получаем значения для статьи
+            //alert($('.sel2').val() + '">' + $('.sel2 option:selected').text());
+            var pa = {
+                ID: $('.sel2').val(),
+                Name: $('.sel2 option:selected').text(),
+                ParentArticle: undefined
+            }
+            var article = {
+                Name: $('#addNameArticle').val(),
+                ParentArticle: pa
+            };
+            //alert($('.sel').val() + "     " + $('.sel option:selected').text());
+            //alert(article["Name"] + "  " + article["ParentArticle"]);
+            $.ajax({
+                url: '/api/articles',
+                type: 'POST',
+                data: JSON.stringify(article),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    // alert(data);
+                    GetAllArticles();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+        // Удаление статьи
+        function DeleteArticle(id) {
+
+            $.ajax({
+                url: '/api/articles/' + id,
+                type: 'DELETE',
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllArticles();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+        // редактирование статьи
+        function EditArticle() {
+            var id = $('#editIDArticle').val();
+            // получаем новые значения для редактируемого контрагента
+            var pa = {
+                ID: $('.sel1').val(),
+                Name: $('.sel1 option:selected').text(),
+                ParentArticle: undefined
+            }
+            var article = {
+                ID: id,
+                Name: $('#editNameArticle').val(),
+                ParentArticle: pa
+            };
+            //alert($('.sel').val() + "     " + $('.sel option:selected').text());
+            $.ajax({
+                url: '/api/articles/' + id,
+                type: 'PUT',
+                data: JSON.stringify(article),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllArticles();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+        // обработчик удаления статьи
+        function DeleteItemArticle(el) {
+
+            // получаем id удаляемого объекта
+            var id = $(el).attr('data-item');
+            DeleteArticle(id);
+        }
+        // обработчик редактирования статьи
+        function EditItemArticle(el) {
+
+            // получаем id редактируемого объекта
+            var id = $(el).attr('data-item');
+            GetArticle(id);
+        }
+        // вывод данных редактируемого
+        function ShowArticle(article) {
+            if (article != null) {
+                $("#createBlockArticle").css('display', 'none');
+                $("#editBlockArticle").css('display', 'block');
+                $("#editIDArticle").val(article.ID);
+                $("#editNameArticle").val(article.Name);
+
+                GetAllArticlesForEdit();
+            }
+            else {
+                alert("Такой статьи не существует");
+            }
+        }
+
+        function GetAllArticlesForEdit() {
+            $.ajax({
+                url: '/api/articles',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    UpdateSelect(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        // запрос статьи на редактирование
+        function GetArticle(id) {
+
+            $.ajax({
+                url: '/api/articles/' + id,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    ShowArticle(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+        // вывод полученных данных на экран
+        function WriteResponseArticle(articles) {
+            var strResult = "<table><th>ID</th><th>Название</th><th>Родительская статья</th>";
+            $.each(articles, function (index, article) {
+                strResult += "<tr><td>" + article.ID + "</td><td> " + article.Name + "</td>";
+                if (article.ParentArticle != null) {
+                    var str = "";
+                    //for (var key in article.ParentArticle)
+                    //    str += key + ": " + this[key] + "     ";
+                    strResult += "<td>" + article.ParentArticle["Name"];
+                }
+                else strResult += "<td>Нет";
+
+                strResult += "</td > <td><a id='editItemArticles' data-item='" + article.ID + "' onclick='EditItemArticle(this);' >Редактировать</a></td>" +
+                    "<td><a id='delItemArticles' data-item='" + article.ID + "' onclick='DeleteItemArticle(this);' >Удалить</a></td></tr>";
+            });
+            strResult += "</table>";
+            $("#tableBlockArticle").html(strResult);
+
+        }
+        //--------------------------------------------------------------
+
+        //----------------------Contractor------------------------------
+        // Получение всех контрагентов по ajax-запросу
+        function GetAllContractors() {
+
+            $("#createBlockContractor").css('display', 'block');
+            $("#editBlockContractor").css('display', 'none');
+            $.ajax({
+                url: '/api/contractors',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    WriteResponse(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        // Добавление нового контрагента
+        function AddContractor() {
+            // получаем значения для контрагента
+            var сontractor = {
+                Name: $('#addName').val()
+            };
+
+            $.ajax({
+                url: '/api/contractors',
+                type: 'POST',
+                data: JSON.stringify(сontractor),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllContractors();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        // Удаление контрагента
+        function DeleteContractor(id) {
+
+            $.ajax({
+                url: '/api/contractors/' + id,
+                type: 'DELETE',
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllContractors();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        // редактирование контрагента
+        function EditContractor() {
+            var id = $('#editID').val()
+            // получаем новые значения для редактируемого контрагента
+            var сontractor = {
+                ID: id,
+                Name: $('#editName').val()
+            };
+            $.ajax({
+                url: '/api/contractors/' + id,
+                type: 'PUT',
+                data: JSON.stringify(сontractor),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllContractors();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        // вывод полученных данных на экран
+        function WriteResponse(сontractors) {
+            var strResult = "<table><th>ID</th><th>Название</th>";
+            $.each(сontractors, function (index, сontractor) {
+                strResult += "<tr><td>" + сontractor.ID + "</td><td> " + сontractor.Name + "</td><td>" +
+                    "</td><td><a id='editItem' data-item='" + сontractor.ID + "' onclick='EditItem(this);' >Редактировать</a></td>" +
+                    "<td><a id='delItem' data-item='" + сontractor.ID + "' onclick='DeleteItem(this);' >Удалить</a></td></tr>";
+            });
+            strResult += "</table>";
+            $("#tableBlockContractor").html(strResult);
+
+        }
+        // обработчик удаления
+        function DeleteItem(el) {
+
+            // получаем id удаляемого объекта
+            var id = $(el).attr('data-item');
+            DeleteContractor(id);
+        }
+        // обработчик редактирования
+        function EditItem(el) {
+
+            // получаем id редактируемого объекта
+            var id = $(el).attr('data-item');
+            GetContractor(id);
+        }
+        // вывод данных редактируемого контрагента в поля для редактирования
+        function ShowContractor(сontractor) {
+            if (сontractor != null) {
+                $("#createBlockContractor").css('display', 'none');
+                $("#editBlockContractor").css('display', 'block');
+                $("#editID").val(сontractor.ID);
+                $("#editName").val(сontractor.Name);
+            }
+            else {
+                alert("Такой контрагент не существует");
+            }
+        }
+        // запрос контрагента на редактирование
+        function GetContractor(id) {
+
+            $.ajax({
+                url: '/api/contractors/' + id,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    ShowContractor(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+        //---------------------------------------------------
+
+        //-----------------------Operation-------------------------------
+        // Получение всех операций по ajax-запросу
+        function GetAllOperations() {
+
+            $("#createBlockOperation").css('display', 'block');
+            $("#editBlockOperation").css('display', 'none');
+            GetAllArticlesForEdit();
+            GetAllContractorsForEdit();
+            $.ajax({
+                url: '/api/operations',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    WriteResponseOperation(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+
+
+        function UpdateSelectContractorOperation(contractors) {
+            $('.selOC1').find('option').remove();
+            $('.selOC1').append('<option select value="' + undefined + '">Нет</option>');
+            $.each(contractors, function (ID, Name) {
+
+                $('.selOC1').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
+            });
+            $('.selOC2').find('option').remove();
+            $('.selOC2').append('<option select value="' + undefined + '">Нет</option>');
+            $.each(contractors, function (ID, Name) {
+
+                $('.selOC2').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
+            });
+        }
+
+        // Добавление новой операции
+        function AddOperation() {
+            // получаем значения для статьи
+            //alert($('.sel2').val() + '">' + $('.sel2 option:selected').text());
+            var a = {
+                ID: $('.selOA2').val(),
+                Name: $('.selOA2 option:selected').text(),
+                ParentArticle: undefined
+            }
+
+            var c = {
+                ID: $('.selOC2').val(),
+                Name: $('.selOC2 option:selected').text()
+            }
+
+            var operation = {
+                Date: $('#addDateOperation').val(),
+                Type: $('.selOT2').val(),
+                Sum: $('#addSumOperation').val(),
+                Contractor: c,
+                Article: a
+            };
+            //alert($('.sel').val() + "     " + $('.sel option:selected').text());
+            //alert(article["Name"] + "  " + article["ParentArticle"]);
+            $.ajax({
+                url: '/api/operations',
+                type: 'POST',
+                data: JSON.stringify(operation),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    // alert(data);
+                    GetAllOperations();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+        // Удаление операции
+        function DeleteOperation(id) {
+
+            $.ajax({
+                url: '/api/operations/' + id,
+                type: 'DELETE',
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllOperations();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+        // редактирование операции
+        function EditOperation() {
+            var id = $('#editIDOperation').val();
+            // получаем новые значения для редактируемого контрагента
+            var a = {
+                ID: $('.selOA2').val(),
+                Name: $('.selOA2 option:selected').text(),
+                ParentArticle: undefined
+            }
+
+            var c = {
+                ID: $('.selOC2').val(),
+                Name: $('.selOC2 option:selected').text()
+            }
+
+            var operation = {
+                Date: $('#addDateOperation').val(),
+                Type: $('.selOT2').val(),
+                Sum: $('#addSumOperation').val(),
+                Contractor: c,
+                Article: a
+            };
+            //alert($('.sel').val() + "     " + $('.sel option:selected').text());
+            $.ajax({
+                url: '/api/operations/' + id,
+                type: 'PUT',
+                data: JSON.stringify(article),
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    GetAllOperations();
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+        // обработчик удаления операции
+        function DeleteItemOperaion(el) {
+
+            // получаем id удаляемого объекта
+            var id = $(el).attr('data-item');
+            DeleteOperation(id);
+        }
+        // обработчик редактирования операции
+        function EditItemOperation(el) {
+
+            // получаем id редактируемого объекта
+            var id = $(el).attr('data-item');
+            GetOperation(id);
+        }
+        // вывод данных редактируемой операции
+        function ShowOperation(operation) {
+            if (operation != null) {
+                $("#createBlockOperation").css('display', 'none');
+                $("#editBlockOperation").css('display', 'block');
+                $("#editIDOperation").val(operation.ID);
+                $("#editDateOperation").val(operation.Date);
+                $("#editTypeOperation").val(operation.Type);
+
+                GetAllArticlesForEdit();
+                GetAllContractorsForEdit();
+            }
+            else {
+                alert("Такой статьи не существует");
+            }
+        }
+
+        function GetAllContractorsForEdit() {
+            $.ajax({
+                url: '/api/contractors',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    UpdateSelectContractorOperation(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+        // запрос операции на редактирование
+        function GetOperation(id) {
+
+            $.ajax({
+                url: '/api/operations/' + id,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    ShowOperation(data);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });
+        }
+
+        // вывод полученных данных на экран
+        function WriteResponseOperation(operations) {
+            var strResult = "<table><th>ID</th><th>Дата</th><th>Тип</th><th>Сумма</th><th>Контрагент</th><th>Статья</th>";
+            $.each(operations, function (index, operation) {
+                strResult += "<tr><td>" + operation.ID + "</td><td> " + operation.Date + "</td>";
+                if (operation.Type == 0) strResult += "<td>Поступление</td>";
+                else if (operation.Type == 1) strResult += "<td>Выплата</td>";
+                strResult += "<td> " + operation.Sum + "</td>";
+                //alert(operation.Contractor+ "    " + operation.Article);
+                if (operation.Contractor != null) {
+                    var str = "";
+                    //for (var key in article.ParentArticle)
+                    //    str += key + ": " + this[key] + "     ";
+                    strResult += "<td>" + operation.Contractor["Name"];
+                }
+                else strResult += "<td>Нет";
+                if (operation.Article != null) {
+                    var str = "";
+                    //for (var key in article.ParentArticle)
+                    //    str += key + ": " + this[key] + "     ";
+                    strResult += "<td>" + operation.Article["Name"];
+                }
+                else strResult += "<td>Нет";
+
+                strResult += "</td > <td><a id='editItemOperation' data-item='" + operation.ID + "' onclick='EditItemOperation(this);' >Редактировать</a></td>" +
+                    "<td><a id='delItemOperation' data-item='" + operation.ID + "' onclick='DeleteItemOperation(this);' >Удалить</a></td></tr>";
+            });
+            strResult += "</table>";
+            $("#tableBlockOperation").html(strResult);
+
+        }
+
+        //-----------------------------------------------------------------
+    </script>
+</body>
+</html>
+

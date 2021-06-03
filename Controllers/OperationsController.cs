@@ -17,39 +17,39 @@ namespace WebApp2.Controllers
         private OperationsContext db = new OperationsContext();
 
         // GET: api/Operations
-        public IQueryable<Operations> GetOperations()
+        public IQueryable<Operation> GetOperations()
         {
             return db.Operations;
         }
 
         // GET: api/Operations/5
-        [ResponseType(typeof(Operations))]
+        [ResponseType(typeof(Operation))]
         public IHttpActionResult GetOperations(int id)
         {
-            Operations operations = db.Operations.Find(id);
-            if (operations == null)
+            Operation operation = db.Operations.Find(id);
+            if (operation == null)
             {
                 return NotFound();
             }
 
-            return Ok(operations);
+            return Ok(operation);
         }
 
         // PUT: api/Operations/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutOperations(int id, Operations operations)
+        public IHttpActionResult PutOperations(int id, Operation operation)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != operations.ID)
+            if (id != operation.ID)
             {
                 return BadRequest();
             }
 
-            db.Entry(operations).State = EntityState.Modified;
+            db.Entry(operation).State = EntityState.Modified;
 
             try
             {
@@ -71,8 +71,8 @@ namespace WebApp2.Controllers
         }
 
         // POST: api/Operations
-        [ResponseType(typeof(Operations))]
-        public IHttpActionResult PostOperations(Operations operations)
+        [ResponseType(typeof(Operation))]
+        public IHttpActionResult PostOperations(Operation operations)
         {
             if (!ModelState.IsValid)
             {
@@ -86,10 +86,10 @@ namespace WebApp2.Controllers
         }
 
         // DELETE: api/Operations/5
-        [ResponseType(typeof(Operations))]
+        [ResponseType(typeof(Operation))]
         public IHttpActionResult DeleteOperations(int id)
         {
-            Operations operations = db.Operations.Find(id);
+            Operation operations = db.Operations.Find(id);
             if (operations == null)
             {
                 return NotFound();
