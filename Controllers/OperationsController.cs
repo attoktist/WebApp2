@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.UI;
 using WebApp2.Models;
 
 namespace WebApp2.Controllers
@@ -16,10 +17,16 @@ namespace WebApp2.Controllers
     {
         private OperationsContext db = new OperationsContext();
 
+       
+
         // GET: api/Operations
-        public IQueryable<Operation> GetOperations()
+        public List<Operation> GetOperations()
         {
-            return db.Operations;
+            //var a = db.Operations;
+            return db.Operations
+                .Include(a => a.Article)
+                .Include(c => c.Contractor)
+                .ToList(); 
         }
 
         // GET: api/Operations/5
@@ -49,8 +56,14 @@ namespace WebApp2.Controllers
                 return BadRequest();
             }
 
-            db.Entry(operation).State = EntityState.Modified;
-
+            Operation tmp = db.Operations.Find(id);
+            tmp.Article = operation.Article;
+            tmp.Contractor = operation.Contractor;
+            tmp.Date = operation.Date;
+            tmp.Sum = operation.Sum;
+            tmp.Type = operation.Type;
+            db.Entry(tmp).State = EntityState.Modified;
+            
             try
             {
                 db.SaveChanges();

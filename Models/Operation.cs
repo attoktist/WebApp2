@@ -12,7 +12,8 @@ namespace WebApp2.Models
         public DateTime Date { get; set; }
         public Type Type { get; set; }
         public int Sum { get; set; }
-        public Contractor Contractor { get; set; }
-        public Article Article { get; set; }
+        public virtual Article Article { get; set; }
+        public virtual Contractor Contractor { get; set; }
+        
     }
 }

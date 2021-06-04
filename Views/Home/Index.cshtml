@@ -605,28 +605,29 @@
             var id = $('#editIDOperation').val();
             // получаем новые значения для редактируемого контрагента
             var a = {
-                ID: $('.selOA2').val(),
-                Name: $('.selOA2 option:selected').text(),
+                ID: $('.selOA1').val(),
+                Name: $('.selOA1 option:selected').text(),
                 ParentArticle: undefined
             }
-
+            //alert(a["ID"] + "   " + a["Name"]);
             var c = {
-                ID: $('.selOC2').val(),
-                Name: $('.selOC2 option:selected').text()
+                ID: $('.selOC1').val(),
+                Name: $('.selOC1 option:selected').text()
             }
-
+            //alert(c["ID"] + "   " + c["Name"]);
             var operation = {
-                Date: $('#addDateOperation').val(),
-                Type: $('.selOT2').val(),
-                Sum: $('#addSumOperation').val(),
+                ID: id,
+                Date: $('#editDateOperation').val(),
+                Type: $('.selOT1').val(),
+                Sum: $('#editSumOperation').val(),
                 Contractor: c,
                 Article: a
             };
-            //alert($('.sel').val() + "     " + $('.sel option:selected').text());
+            //alert(operation["Date"]);
             $.ajax({
                 url: '/api/operations/' + id,
                 type: 'PUT',
-                data: JSON.stringify(article),
+                data: JSON.stringify(operation),
                 contentType: "application/json;charset=utf-8",
                 success: function (data) {
                     GetAllOperations();
@@ -657,9 +658,11 @@
                 $("#createBlockOperation").css('display', 'none');
                 $("#editBlockOperation").css('display', 'block');
                 $("#editIDOperation").val(operation.ID);
-                $("#editDateOperation").val(operation.Date);
-                $("#editTypeOperation").val(operation.Type);
-
+               // var date = new Date(operation.Date);
+                //alert(date);
+                // $("#editDateOperation").val(date);
+               // $("#editTypeOperation :nth-child(" + operation.Type+1+")").attr("selected", "selected");
+                $("#editSumOperation").val(operation.ID);
                 GetAllArticlesForEdit();
                 GetAllContractorsForEdit();
             }
@@ -699,27 +702,32 @@
 
         // вывод полученных данных на экран
         function WriteResponseOperation(operations) {
+            //alert(operations[0]["Article"]);
             var strResult = "<table><th>ID</th><th>Дата</th><th>Тип</th><th>Сумма</th><th>Контрагент</th><th>Статья</th>";
             $.each(operations, function (index, operation) {
-                strResult += "<tr><td>" + operation.ID + "</td><td> " + operation.Date + "</td>";
-                if (operation.Type == 0) strResult += "<td>Поступление</td>";
-                else if (operation.Type == 1) strResult += "<td>Выплата</td>";
-                strResult += "<td> " + operation.Sum + "</td>";
+                strResult += "<tr><td>" + operation.ID + "</td><td>    " + operation.Date + "</td>";
+                if (operation.Type == 0) strResult += "<td>   Поступление</td>";
+                else if (operation.Type == 1) strResult += "<td>   Выплата</td>";
+                strResult += "<td>     " + operation.Sum + "</td>";
+                //var str = "";
+                //for (var key in operation)
+                   // str += key + ": " + this[key] + "     ";
+                //alert(str);
                 //alert(operation.Contractor+ "    " + operation.Article);
                 if (operation.Contractor != null) {
                     var str = "";
                     //for (var key in article.ParentArticle)
                     //    str += key + ": " + this[key] + "     ";
-                    strResult += "<td>" + operation.Contractor["Name"];
+                    strResult += "<td>   " + operation.Contractor["Name"];
                 }
-                else strResult += "<td>Нет";
+                else strResult += "<td>  Нет";
                 if (operation.Article != null) {
                     var str = "";
                     //for (var key in article.ParentArticle)
                     //    str += key + ": " + this[key] + "     ";
-                    strResult += "<td>" + operation.Article["Name"];
+                    strResult += "<td>   " + operation.Article["Name"];
                 }
-                else strResult += "<td>Нет";
+                else strResult += "<td>  Нет";
 
                 strResult += "</td > <td><a id='editItemOperation' data-item='" + operation.ID + "' onclick='EditItemOperation(this);' >Редактировать</a></td>" +
                     "<td><a id='delItemOperation' data-item='" + operation.ID + "' onclick='DeleteItemOperation(this);' >Удалить</a></td></tr>";

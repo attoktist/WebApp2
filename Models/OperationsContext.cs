@@ -10,9 +10,16 @@ namespace WebApp2.Models
     {
         public OperationsContext():base("dbConnection")
         {
-            Configuration.LazyLoadingEnabled = false;
-            Configuration.ProxyCreationEnabled = false;
+            //Configuration.LazyLoadingEnabled = false;
+            //Configuration.ProxyCreationEnabled = false;
         }
+
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Operation>()
+        //     .HasOptional(x => x.Contractor);
+
+        //}
         //DbSet<Operations> Operations { get; set; }
 
         public DbSet<Operation> Operations { get; set; }
