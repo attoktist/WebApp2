@@ -20,7 +20,16 @@ namespace WebApp2
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            
+            //config.Routes.MapHttpRoute(
+            //    name: "FilterApi",
+            //    routeTemplate: "api/{controller}/{startYear}&{endYear}&{masContractor}&{masArticle}",
+            //    defaults: new {  
+            //        startYear = RouteParameter.Optional, 
+            //        endYear = RouteParameter.Optional, 
+            //        masContractor = RouteParameter.Optional, 
+            //        masArticle = RouteParameter.Optional
+            //    }
+            //);
         }
     }
 }

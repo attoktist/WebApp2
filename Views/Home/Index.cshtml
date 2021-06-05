@@ -59,6 +59,18 @@
 
     <div id="Operation">
         <div id="tableBlockOperation"></div>
+        <div id="filter">
+           <table>
+               <th>Дата начала</th><th>Дата конца</th><th>контрагенты</th><th>статьи</th>
+               <tr>
+                   <td><input type="date" id="filterStartDate" /></td>
+                   <td><input type="date" id="filterEndDate" /></td>
+                   <td><select class="selOC1" id="filterContractors" multiple></select></td>
+                   <td><select class="selOA1" id="filterArticles" multiple></select></td>
+                   <td><button id="filterOperation">Фильтровать</button></td>
+               </tr>
+           </table>
+        </div>
         <div id="editBlockOperation">
             <h3>Редактирование операции</h3>
             <table>
@@ -168,6 +180,10 @@
                 event.preventDefault();
                 AddOperation();
             });
+            $("#filterOperation").click(function (event) {
+                event.preventDefault();
+                FilterOperation();
+            });
 
         });
 
@@ -224,8 +240,7 @@
 
         // Добавление новой статьи
         function AddArticle() {
-            // получаем значения для статьи
-            //alert($('.sel2').val() + '">' + $('.sel2 option:selected').text());
+            // получаем значения для статьи           
             var pa = {
                 ID: $('.sel2').val(),
                 Name: $('.sel2 option:selected').text(),
@@ -234,9 +249,7 @@
             var article = {
                 Name: $('#addNameArticle').val(),
                 ParentArticle: pa
-            };
-            //alert($('.sel').val() + "     " + $('.sel option:selected').text());
-            //alert(article["Name"] + "  " + article["ParentArticle"]);
+            };            
             $.ajax({
                 url: '/api/articles',
                 type: 'POST',
@@ -281,8 +294,7 @@
                 ID: id,
                 Name: $('#editNameArticle').val(),
                 ParentArticle: pa
-            };
-            //alert($('.sel').val() + "     " + $('.sel option:selected').text());
+            };            
             $.ajax({
                 url: '/api/articles/' + id,
                 type: 'PUT',
@@ -360,10 +372,7 @@
             var strResult = "<table><th>ID</th><th>Название</th><th>Родительская статья</th>";
             $.each(articles, function (index, article) {
                 strResult += "<tr><td>" + article.ID + "</td><td> " + article.Name + "</td>";
-                if (article.ParentArticle != null) {
-                    var str = "";
-                    //for (var key in article.ParentArticle)
-                    //    str += key + ": " + this[key] + "     ";
+                if (article.ParentArticle != null) {                   
                     strResult += "<td>" + article.ParentArticle["Name"];
                 }
                 else strResult += "<td>Нет";
@@ -528,7 +537,29 @@
             });
         }
 
+        function FilterOperation() {
 
+            var cont = $('#filterContractors').val();
+            var art = $('#filterArticles').val();           
+            var filter = {
+                StartDate: $('#filterStartDate').val(),
+                EndDate: $('#filterEndDate').val(),
+                Contractors: cont,
+                Articles: art
+            }           
+            $.ajax({
+                url: '/api/operations/filter',
+                type: 'POST',                
+                data: JSON.stringify(filter),
+                contentType: "application/json;charset=utf-8",
+                success: function (response) {
+                    WriteResponseOperation(response);
+                },
+                error: function (x, y, z) {
+                    alert(x + '\n' + y + '\n' + z);
+                }
+            });           
+        }
 
         function UpdateSelectContractorOperation(contractors) {
             $('.selOC1').find('option').remove();
@@ -547,8 +578,7 @@
 
         // Добавление новой операции
         function AddOperation() {
-            // получаем значения для статьи
-            //alert($('.sel2').val() + '">' + $('.sel2 option:selected').text());
+            // получаем значения для статьи            
             var a = {
                 ID: $('.selOA2').val(),
                 Name: $('.selOA2 option:selected').text(),
@@ -566,16 +596,13 @@
                 Sum: $('#addSumOperation').val(),
                 Contractor: c,
                 Article: a
-            };
-            //alert($('.sel').val() + "     " + $('.sel option:selected').text());
-            //alert(article["Name"] + "  " + article["ParentArticle"]);
+            };            
             $.ajax({
                 url: '/api/operations',
                 type: 'POST',
                 data: JSON.stringify(operation),
                 contentType: "application/json;charset=utf-8",
-                success: function (data) {
-                    // alert(data);
+                success: function (data) {                    
                     GetAllOperations();
                 },
                 error: function (x, y, z) {
@@ -657,11 +684,7 @@
             if (operation != null) {
                 $("#createBlockOperation").css('display', 'none');
                 $("#editBlockOperation").css('display', 'block');
-                $("#editIDOperation").val(operation.ID);
-               // var date = new Date(operation.Date);
-                //alert(date);
-                // $("#editDateOperation").val(date);
-               // $("#editTypeOperation :nth-child(" + operation.Type+1+")").attr("selected", "selected");
+                $("#editIDOperation").val(operation.ID);               
                 $("#editSumOperation").val(operation.ID);
                 GetAllArticlesForEdit();
                 GetAllContractorsForEdit();
@@ -708,23 +731,12 @@
                 strResult += "<tr><td>" + operation.ID + "</td><td>    " + operation.Date + "</td>";
                 if (operation.Type == 0) strResult += "<td>   Поступление</td>";
                 else if (operation.Type == 1) strResult += "<td>   Выплата</td>";
-                strResult += "<td>     " + operation.Sum + "</td>";
-                //var str = "";
-                //for (var key in operation)
-                   // str += key + ": " + this[key] + "     ";
-                //alert(str);
-                //alert(operation.Contractor+ "    " + operation.Article);
-                if (operation.Contractor != null) {
-                    var str = "";
-                    //for (var key in article.ParentArticle)
-                    //    str += key + ": " + this[key] + "     ";
+                strResult += "<td>     " + operation.Sum + "</td>";                
+                if (operation.Contractor != null) {                    
                     strResult += "<td>   " + operation.Contractor["Name"];
                 }
                 else strResult += "<td>  Нет";
-                if (operation.Article != null) {
-                    var str = "";
-                    //for (var key in article.ParentArticle)
-                    //    str += key + ": " + this[key] + "     ";
+                if (operation.Article != null) {                   
                     strResult += "<td>   " + operation.Article["Name"];
                 }
                 else strResult += "<td>  Нет";

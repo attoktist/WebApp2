@@ -29,6 +29,69 @@ namespace WebApp2.Controllers
                 .ToList(); 
         }
 
+        [HttpPost]
+        [Route("api/Operations/filter")]
+        public List<Operation> GetOperations(FilterOperation filter)
+        {
+          if(filter!=null)
+            {                
+                List<Operation> operations = db.Operations
+                    .Include(a => a.Article)
+                    .Include(c => c.Contractor)
+                    .ToList();
+                List<Operation> result = new List<Operation>();
+                if (filter.Articles != null)
+                {
+                    List<Article> id = new List<Article>();
+                    foreach(int a in filter.Articles)
+                    {
+                        id.Add(db.Articles.Find(a));
+                    }
+                    
+                    List<Article> articles = db.Articles.ToList();
+                    List<Article> filterArt = new List<Article>();
+
+                    filterArt = FilterOperation.getAllParentArticle(articles, id);
+                    filterArt = filterArt.Distinct().ToList();
+
+                    foreach(Article article in filterArt)
+                    {
+                        result.AddRange(operations.Where(a => a.Article.ID == article.ID).ToList());
+                    }
+                }
+
+                if (filter.Contractors != null)
+                {
+                    List<Operation> tmp = new List<Operation>();
+                    
+                    foreach (int a in filter.Contractors)
+                    {
+                        tmp.AddRange(result.Where(c => c.Contractor.ID == a));
+                    }
+
+
+                    result = tmp;
+                }
+
+                if (filter.StartDate.Year != 1)
+                {
+                    result = result.Where(op => op.Date > filter.StartDate)                    
+                    .ToList();
+                }
+                if (filter.EndDate.Year != 1)
+                {
+                    result = result.Where(op => op.Date < filter.EndDate)
+                    .ToList();
+                }
+                    
+
+                return result;
+            }
+            
+          return null;
+        }
+        
+
         // GET: api/Operations/5
         [ResponseType(typeof(Operation))]
         public IHttpActionResult GetOperations(int id)

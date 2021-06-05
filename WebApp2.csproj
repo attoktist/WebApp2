@@ -332,6 +332,7 @@
     <Compile Include="Models\ArticleContext.cs" />
     <Compile Include="Models\Contractor.cs" />
     <Compile Include="Models\ContractorContext.cs" />
+    <Compile Include="Models\FilterOperation.cs" />
     <Compile Include="Models\Operation.cs" />
     <Compile Include="Models\OperationsContext.cs" />
     <Compile Include="Models\OperationsDbInitializer.cs" />
