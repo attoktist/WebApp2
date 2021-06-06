@@ -15,7 +15,7 @@ namespace WebApp2
     {
         protected void Application_Start()
         {           
-            Database.SetInitializer(new OperationsDbInitializer());
+            //Database.SetInitializer(new OperationsDbInitializer());
 
 
             AreaRegistration.RegisterAllAreas();

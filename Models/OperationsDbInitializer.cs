@@ -15,7 +15,7 @@ namespace WebApp2.Models
            // db.Configuration.ValidateOnSaveEnabled = false;
             //контрагенты
             Random rand = new Random();
-            int count = 100;
+            int count = 5500;
             List<Contractor> contractors = new List<Contractor>();
             for (int i = 0; i < count; i++)
             {
@@ -41,7 +41,7 @@ namespace WebApp2.Models
 
 
             //статьи
-            count = 130;
+            count = 1300;
             List<Article> articles = new List<Article>();
             for (int i = 0; i < count; i++)
             {
@@ -53,7 +53,7 @@ namespace WebApp2.Models
             int art = rand.Next(0, count);
             int parentArt = rand.Next(0, count);
             int k = 0;
-            while (k < 30)
+            while (k < 300)
             {
                 articles[art].ParentArticle = articles[parentArt];
                 k++;
@@ -71,7 +71,7 @@ namespace WebApp2.Models
                     k++;
                     parentArt = rand.Next(0, count);
                 }
-                if (k >= 10) break;
+                if (k >= 100) break;
             }
 
             
@@ -92,19 +92,20 @@ namespace WebApp2.Models
 
 
 
-            count = 101;
+            count = 10100;
 
             List<Operation> operations = new List<Operation>();
 
             
                 DateTime date = DateTime.Now;
                 int minYear = date.Year - 2;
-                int cc = db.Contractors.Count();
-                // int cc = contractors.Count;
+            int ca = db.Articles.Count();
+
+            int art1 = rand.Next(1, ca);
+            int cc = db.Contractors.Count();
+                
                 int cont1 = rand.Next(1, cc);
-                int ca = db.Articles.Count();
-                //int ca = articles.Count;
-                int art1 = rand.Next(1, ca);
+               
                 int year = rand.Next(minYear, date.Year);
                 int month = rand.Next(1, 12);
                 int day = rand.Next(1, 28);
@@ -112,6 +113,7 @@ namespace WebApp2.Models
                 int tp = rand.Next(0, 1);
                 Type type = Type.Admission;
 
+            
                 for (int i = 0; i < count; i++)
                 {
 
@@ -139,26 +141,39 @@ namespace WebApp2.Models
                     else if (tp == 1) type = Type.Pay;
                 }
 
+            //for (int j = 0; j <operations.Count/100; j++)
+            //{
+            //    for(int i=j*100;i<100;i++)
+            //    {
+            //        db.Operations.Add(operations[i]);
+
+            //        try
+            //        {
+            //            db.SaveChanges();
+            //        }
+            //        catch (Exception ex)
+            //        {
+
+            //        }
+            //    }
+            //}
 
 
+            foreach (Operation operation in operations)
+            {
 
-                foreach (Operation operation in operations)
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex)
                 {
 
-                    db.Operations.Add(operation);
-                    //db.Entry(operation).State = EntityState.Added;
-                    try
-                    {
-                        db.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
                 }
-            
+            }
+
             //db.Configuration.AutoDetectChangesEnabled = true;
-           // db.Configuration.ValidateOnSaveEnabled = true;
+            // db.Configuration.ValidateOnSaveEnabled = true;
         }
     }
 }
