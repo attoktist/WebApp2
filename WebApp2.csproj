@@ -440,19 +440,19 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WebApp.Domain.Interfaces2\WebApp.Domain.Interfaces.csproj">
+    <ProjectReference Include="WebApp.Domain.Interfaces2\WebApp.Domain.Interfaces.csproj">
       <Project>{4009ecc3-3d7b-492b-b3b0-384ac62655cf}</Project>
       <Name>WebApp.Domain.Interfaces</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WebApp2.Domain.Core2\WebApp2.Domain.Core.csproj">
+    <ProjectReference Include="WebApp2.Domain.Core2\WebApp2.Domain.Core.csproj">
       <Project>{28bd233e-d38b-4274-be78-42a19ccaf419}</Project>
       <Name>WebApp2.Domain.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WebApp2.Infrastructure.Data2\WebApp2.Infrastructure.Data.csproj">
+    <ProjectReference Include="WebApp2.Infrastructure.Data2\WebApp2.Infrastructure.Data.csproj">
       <Project>{32b4ab13-9bb6-458b-bedf-c9b37cc51ab0}</Project>
       <Name>WebApp2.Infrastructure.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\WebApp2.Services.Interfaces2\WebApp2.Services.Interfaces.csproj">
+    <ProjectReference Include="WebApp2.Services.Interfaces2\WebApp2.Services.Interfaces.csproj">
       <Project>{555f00bd-047f-4bcb-a0db-a3516740c1bc}</Project>
       <Name>WebApp2.Services.Interfaces</Name>
     </ProjectReference>
