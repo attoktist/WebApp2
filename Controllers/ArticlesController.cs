@@ -8,25 +8,33 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using WebApp2.Models;
+using WebApp2.Domain.Core;
+using WebApp2.Domain.Interfaces;
+using WebApp2.Infrastructure.Data;
+
 
 namespace WebApp2.Controllers
 {
     public class ArticlesController : ApiController
     {
-        private ArticleContext db = new ArticleContext();
+        // private ArticleContext db = new ArticleContext();
+        private ArticleRepository repo;
 
-        // GET: api/Articles
-        public IQueryable<Article> GetArticles()
+        public ArticlesController()
         {
-            return db.Articles;
+            repo = new ArticleRepository();
+        }
+        // GET: api/Articles
+        public List<Article> GetArticles()
+        {
+            return repo.GetList().ToList();
         }
 
         // GET: api/Articles/5
         [ResponseType(typeof(Article))]
         public IHttpActionResult GetArticle(int id)
         {
-            Article article = db.Articles.Find(id);
+            Article article = repo.Get(id);
             if (article == null)
             {
                 return NotFound();
@@ -49,23 +57,7 @@ namespace WebApp2.Controllers
                 return BadRequest();
             }
 
-            db.Entry(article).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ArticleExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            repo.Update(article);
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -79,8 +71,7 @@ namespace WebApp2.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Articles.Add(article);
-            db.SaveChanges();
+            repo.Create(article);
 
             return CreatedAtRoute("DefaultApi", new { id = article.ID }, article);
         }
@@ -89,14 +80,13 @@ namespace WebApp2.Controllers
         [ResponseType(typeof(Article))]
         public IHttpActionResult DeleteArticle(int id)
         {
-            Article article = db.Articles.Find(id);
+            Article article = repo.Get(id);
             if (article == null)
             {
                 return NotFound();
             }
 
-            db.Articles.Remove(article);
-            db.SaveChanges();
+            repo.Delete(id);
 
             return Ok(article);
         }
@@ -105,14 +95,14 @@ namespace WebApp2.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                repo.Dispose();
             }
             base.Dispose(disposing);
         }
 
-        private bool ArticleExists(int id)
-        {
-            return db.Articles.Count(e => e.ID == id) > 0;
-        }
+        //private bool ArticleExists(int id)
+        //{
+        //    return db.Articles.Count(e => e.ID == id) > 0;
+        //}
     }
 }

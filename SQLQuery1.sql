@@ -1,0 +1,1 @@
+﻿BACKUP DATABASE testDB TO DISK='D:\testDB.bak'

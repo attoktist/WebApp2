@@ -9,25 +9,33 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
-using WebApp2.Models;
+using WebApp2.Domain.Core;
+using WebApp2.Domain.Interfaces;
+using WebApp2.Infrastructure.Data;
 
 namespace WebApp2.Controllers
 {
     public class ContractorsController : ApiController
     {
-        private ContractorContext db = new ContractorContext();
+        // private ContractorContext db = new ContractorContext();
+        private ContractorRepository repo;
+
+        public ContractorsController()
+        {
+            repo = new ContractorRepository();
+        }
 
         // GET: api/Contractors
-        public IQueryable<Contractor> GetContractors()
+        public List<Contractor> GetContractors()
         {
-            return db.Contractors;
+            return repo.GetList().ToList();
         }
 
         // GET: api/Contractors/5
         [ResponseType(typeof(Contractor))]
         public IHttpActionResult GetContractor(int id)
         {
-            Contractor contractor = db.Contractors.Find(id);
+            Contractor contractor = repo.Get(id);
             if (contractor == null)
             {
                 return NotFound();
@@ -51,23 +59,7 @@ namespace WebApp2.Controllers
                 return BadRequest();
             }
 
-            db.Entry(contractor).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ContractorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            repo.Update(contractor);
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -82,22 +74,7 @@ namespace WebApp2.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Contractors.Add(contractor);
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                //if (!ContractorExists(id))
-                //{
-                //    return NotFound();
-                //}
-                //else
-                //{
-                //    throw;
-                //}
-            }
+            repo.Create(contractor);
 
             return CreatedAtRoute("DefaultApi", new { id = contractor.ID }, contractor);
         }
@@ -107,28 +84,13 @@ namespace WebApp2.Controllers
         [ResponseType(typeof(Contractor))]
         public IHttpActionResult DeleteContractor(int id)
         {
-            Contractor contractor = db.Contractors.Find(id);
+            Contractor contractor = repo.Get(id);
             if (contractor == null)
             {
                 return NotFound();
             }
 
-            db.Contractors.Remove(contractor);
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ContractorExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            repo.Delete(id);
 
             return Ok(contractor);
         }
@@ -137,14 +99,14 @@ namespace WebApp2.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                repo.Dispose();
             }
             base.Dispose(disposing);
         }
 
-        private bool ContractorExists(int id)
-        {
-            return db.Contractors.Count(e => e.ID == id) > 0;
-        }
+        //private bool ContractorExists(int id)
+        //{
+        //    return db.Contractors.Count(e => e.ID == id) > 0;
+        //}
     }
 }
