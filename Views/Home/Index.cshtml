@@ -362,27 +362,27 @@
 
             function UpdateSelect(articles) {
                 $('.sel1').find('option').remove();
-                $('.sel1').append('<option select value="' + undefined + '">Нет</option>');
+                $('.sel1').append('<option select value="' + null + '">Нет</option>');
                 $.each(articles, function (ID, Name) {
 
                     $('.sel1').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
                 });
                 $('.sel2').find('option').remove();
-                $('.sel2').append('<option select value="' + undefined + '">Нет</option>');
+                $('.sel2').append('<option select value="' + null + '">Нет</option>');
                 $.each(articles, function (ID, Name) {
 
                     $('.sel2').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
                 });
 
                 $('.selOA1').find('option').remove();
-                $('.selOA1').append('<option select value="' + undefined + '">Нет</option>');
+                $('.selOA1').append('<option select value="' + null + '">Нет</option>');
                 $.each(articles, function (ID, Name) {
 
                     $('.selOA1').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
                 });
 
                 $('.selOA2').find('option').remove();
-                $('.selOA2').append('<option select value="' + undefined + '">Нет</option>');
+                $('.selOA2').append('<option select value="' + null + '">Нет</option>');
                 $.each(articles, function (ID, Name) {
 
                     $('.selOA2').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
@@ -392,11 +392,14 @@
             // Добавление новой статьи
             function AddArticle() {
                 // получаем значения для статьи
+
                 var pa = {
                     ID: $('.sel2').val(),
                     Name: $('.sel2 option:selected').text(),
-                    ParentArticle: undefined
+                    ParentArticle: null
                 }
+
+                if ($('.sel2').val() == null) pa = null;
                 var article = {
                     Name: $('#addNameArticle').val(),
                     ParentArticle: pa
@@ -439,13 +442,18 @@
                 var pa = {
                     ID: $('.sel1').val(),
                     Name: $('.sel1 option:selected').text(),
-                    ParentArticle: undefined
+                    ParentArticle: null
+                }
+                if ($('.sel1').val() === null) {
+                    pa = null;
+                    alert(pa);
                 }
                 var article = {
                     ID: id,
                     Name: $('#editNameArticle').val(),
                     ParentArticle: pa
                 };
+               // alert(article.ParentArticle.ID);
                 $.ajax({
                     url: '/api/articles/' + id,
                     type: 'PUT',
@@ -714,13 +722,13 @@
 
             function UpdateSelectContractorOperation(contractors) {
                 $('.selOC1').find('option').remove();
-                $('.selOC1').append('<option select value="' + undefined + '">Нет</option>');
+                $('.selOC1').append('<option select value="' + null + '">Нет</option>');
                 $.each(contractors, function (ID, Name) {
 
                     $('.selOC1').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
                 });
                 $('.selOC2').find('option').remove();
-                $('.selOC2').append('<option select value="' + undefined + '">Нет</option>');
+                $('.selOC2').append('<option select value="' + null + '">Нет</option>');
                 $.each(contractors, function (ID, Name) {
 
                     $('.selOC2').append('<option value="' + Name["ID"] + '">' + Name["Name"] + '</option>');
@@ -733,7 +741,7 @@
                 var a = {
                     ID: $('.selOA2').val(),
                     Name: $('.selOA2 option:selected').text(),
-                    ParentArticle: undefined
+                    ParentArticle: null
                 }
 
                 var c = {
@@ -785,7 +793,7 @@
                 var a = {
                     ID: $('.selOA1').val(),
                     Name: $('.selOA1 option:selected').text(),
-                    ParentArticle: undefined
+                    ParentArticle: null
                 }
                 //alert(a["ID"] + "   " + a["Name"]);
                 var c = {
@@ -817,7 +825,7 @@
             }
 
             // обработчик удаления операции
-            function DeleteItemOperaion(el) {
+            function DeleteItemOperation(el) {
 
                 // получаем id удаляемого объекта
                 var id = $(el).attr('data-item');

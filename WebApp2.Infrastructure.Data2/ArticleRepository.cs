@@ -6,12 +6,22 @@ using System.Linq;
 using System.Text;
 using WebApp2.Domain.Core;
 using WebApp2.Domain.Interfaces;
+using Dapper;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
+using Dapper.Contrib.Extensions;
+
+
+
+//using Dapper.Contrib.Extensions;
 
 namespace WebApp2.Infrastructure.Data
 {
     public class ArticleRepository : IRepository<Article>
     {
         private ArticleContext db;
+        private string connectionString = ConfigurationManager.ConnectionStrings["dbConnection"].ConnectionString;
 
         public ArticleRepository()
         {
@@ -31,35 +41,33 @@ namespace WebApp2.Infrastructure.Data
 
         public void Create(Article article)
         {
-            
-            db.Articles.Add(article);
-            db.SaveChanges();
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {               
+                article.ParentArticle_ID = article.ParentArticle.ID;
+                 db.Insert<ArticleBase>(article);
+            }
+
         }
 
         public void Update(Article article)
-        {            
-            if(article!=null) db.Entry(article).State = EntityState.Modified;
-
-            try
+        {   
+            using (IDbConnection db = new SqlConnection(connectionString))
             {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-               
+                article.ParentArticle_ID = article.ParentArticle.ID;
+                db.Update<ArticleBase>(article);
             }
 
-           
         }
 
         public void Delete(int id)
         {
-            Article article = db.Articles.Find(id);
-            if (article != null)
+            
+
+            using (IDbConnection db = new SqlConnection(connectionString))
             {
-                // return NotFound();
-                db.Articles.Remove(article);
-                db.SaveChanges();
+                Article art = Get(id);
+                if(art!=null)
+                db.Delete<ArticleBase>(art);
             }
         }
 

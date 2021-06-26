@@ -1,14 +1,19 @@
-﻿using System;
+﻿
+using Dapper.Contrib.Extensions;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace WebApp2.Domain.Core
 {
-    public class Article
+    
+    public class Article : ArticleBase
     {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public Article ParentArticle { get; set; }
+        [Write(false)]
+        [ForeignKey("ParentArticle_ID")]
+        public virtual  Article ParentArticle { get; set; }
     }
 }

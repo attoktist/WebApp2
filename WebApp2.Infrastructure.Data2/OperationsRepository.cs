@@ -1,8 +1,12 @@
 ﻿
+using Dapper.Contrib.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using WebApp2.Domain.Core;
 using WebApp2.Domain.Interfaces;
@@ -12,7 +16,7 @@ namespace WebApp2.Infrastructure.Data
     public class OperationsRepository : IRepository<Operation>
     {
         private OperationsContext db;
-
+        private string connectionString = ConfigurationManager.ConnectionStrings["dbConnection"].ConnectionString;
         public OperationsRepository()
         {
             this.db = new OperationsContext();
@@ -20,9 +24,13 @@ namespace WebApp2.Infrastructure.Data
 
         public void RandomBD()
         {
+
             db.Operations.RemoveRange(db.Operations);
-            db.Contractors.RemoveRange(db.Contractors);
-            db.Articles.RemoveRange(db.Articles);
+
+             db.Contractors.RemoveRange(db.Contractors);
+
+             db.Articles.RemoveRange(db.Articles);
+            
             Random rand = new Random();
             int count = 55;
             List<Contractor> contractors = new List<Contractor>();
@@ -53,6 +61,13 @@ namespace WebApp2.Infrastructure.Data
                 articles.Add(tmp);
             }
 
+            foreach (Article article in articles)
+            {
+                db.Articles.Add(article);
+            }
+
+           
+
             //Вложенные статьи 1 уровня
             int art = rand.Next(0, count);
             int parentArt = rand.Next(0, count);
@@ -76,11 +91,6 @@ namespace WebApp2.Infrastructure.Data
                     parentArt = rand.Next(0, count);
                 }
                 if (k >= 1) break;
-            }
-
-            foreach (Article article in articles)
-            {
-                db.Articles.Add(article);
             }
 
             try
@@ -171,7 +181,7 @@ namespace WebApp2.Infrastructure.Data
 
                     foreach (Article article in filterArt)
                     {
-                        result.AddRange(operations.Where(a => a.Article.ID == article.ID).ToList());
+                        result.AddRange(operations.Where(a => a.Article!=null && a.Article.ID == article.ID).ToList());
                     }
                 }
 
@@ -181,7 +191,7 @@ namespace WebApp2.Infrastructure.Data
 
                     foreach (int a in filter.Contractors)
                     {
-                        tmp.AddRange(result.Where(c => c.Contractor.ID == a));
+                        tmp.AddRange(result.Where(c => c.Contractor!=null && c.Contractor.ID == a));
                     }
 
 
@@ -209,22 +219,28 @@ namespace WebApp2.Infrastructure.Data
         public void Create(Operation operation)
         {
             if(operation!=null)
-            {
-                db.Operations.Add(operation);
-                db.SaveChanges();
+            {               
+                using (IDbConnection db = new SqlConnection(connectionString))
+                {
+                    operation.Article_ID = operation.Article.ID;
+                    operation.Contractor_ID = operation.Contractor.ID;
+                    db.Insert<OperationBase>(operation);
+                }
+
             }
         }
 
         public void Delete(int id)
-        {
-            Operation operation = db.Operations.Find(id);
-            if (operation != null)
+        {           
+            using (IDbConnection db = new SqlConnection(connectionString))
             {
-                db.Operations.Remove(operation);
-                db.SaveChanges();
+                Operation operation = Get(id);
+                if(operation!=null)
+                {
+                    db.Delete<OperationBase>(operation);
+                }
             }
 
-            
         }
 
         public void Dispose()
@@ -253,22 +269,12 @@ namespace WebApp2.Infrastructure.Data
         }
 
         public void Update(Operation operation)
-        {
-            Operation tmp = db.Operations.Find(operation.ID);
-            tmp.Article = operation.Article;
-            tmp.Contractor = operation.Contractor;
-            tmp.Date = operation.Date;
-            tmp.Sum = operation.Sum;
-            tmp.Type = operation.Type;
-            db.Entry(tmp).State = EntityState.Modified;
-
-            try
+        {           
+            using (IDbConnection db = new SqlConnection(connectionString))
             {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                
+                operation.Article_ID = operation.Article.ID;
+                operation.Contractor_ID = operation.Contractor.ID;
+                db.Update<OperationBase>(operation);
             }
         }
 
